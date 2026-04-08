@@ -1,6 +1,4 @@
-networks:
-  iot-net:
-    driver: bridge
+version: '3.8'
 
 services:
 
@@ -9,8 +7,10 @@ services:
     container_name: mosquitto
     ports:
       - "1883:1883"
+      - "8883:8883"   # TLS port added
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./certs:/mosquitto/certs:ro   # Mount certs (read-only)
     networks:
       - iot-net
     restart: unless-stopped
@@ -42,6 +42,10 @@ services:
     depends_on:
       - suricata
     restart: unless-stopped
+
+networks:
+  iot-net:
+    driver: bridge
 
 volumes:
   suricata-logs:
