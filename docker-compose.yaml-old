@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
 
   mosquitto:
@@ -5,10 +7,10 @@ services:
     container_name: mosquitto
     ports:
       - "1883:1883"
-      - "8883:8883"
+      - "8883:8883"   # TLS port added
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./certs:/mosquitto/certs:ro
+      - ./certs:/mosquitto/certs:ro   # Mount certs (read-only)
     networks:
       - iot-net
     restart: unless-stopped
@@ -19,26 +21,13 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    network_mode: "host"
+    network_mode: service:mosquitto
     volumes:
       - ./suricata/rules:/etc/suricata/rules
       - suricata-logs:/var/log/suricata
-    command:
-      - suricata
-      - -c
-      - /etc/suricata/suricata.yaml
-      - -i
-      - ens5
-      - -l
-      - /var/log/suricata
-      - --set
-      - rule-files.0=/etc/suricata/rules/local.rules
-      - --set
-      - rule-files.1=/etc/suricata/rules/mqtt-rate-limit.rules
-      - --set
-      - rule-files.2=/etc/suricata/rules/mqtt-malformed-json.rules
-    depends_on:
-      - mosquitto
+    command: >
+      suricata -c /etc/suricata/suricata.yaml -i eth0
+      --set rule-files.0=/etc/suricata/rules/local.rules
     restart: unless-stopped
 
   filebeat:

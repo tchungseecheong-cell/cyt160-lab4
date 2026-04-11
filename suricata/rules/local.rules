@@ -1,5 +1,7 @@
-alert tcp any any -> any 1883 (msg:"MQTT Malformed Payload - Too long";
-  content:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"; depth:100; sid:1000001; rev:1;)
+#alert tcp any any -> any 1883 (msg:"MQTT Excessive Publish Rate - Possible Flood Attack"; flow:established,to_server; threshold:type both, track by_src, count 100, seconds 60; classtype:attempted-dos; sid:2000001; rev:1;)
 
-alert tcp any any -> any 1883 (msg:"MQTT Suspicious Payload - Shell pattern";
-  content:"rm -rf"; sid:1000002; rev:1;)
+#alert tcp any any -> any 1883 (msg:"MQTT Payload Contains Undefined - Malformed JSON Indicator"; flow:established,to_server; content:"undefined"; classtype:bad-unknown; sid:2000002; rev:1;)
+
+#alert tcp any any -> any 1883 (msg:"MQTT Oversized Repeated-Byte Payload - Buffer Overflow Probe"; flow:established,to_server; content:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"; depth:100; classtype:bad-unknown; sid:2000003; rev:1;)
+
+#alert tcp any any -> any 1883 (msg:"MQTT Malformed JSON"; content:"{"; classtype:bad-unknown; sid:2000004; rev:1;)
