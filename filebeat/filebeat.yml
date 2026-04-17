@@ -6,9 +6,12 @@ filebeat.inputs:
     json.keys_under_root: true
     json.add_error_key: true
 
-output.elasticsearch:
-  hosts: ["http://host.docker.internal:9200"]
-  index: "suricata-alerts-%{+yyyy.MM.dd}"
+#output.elasticsearch:
+ # hosts: ["http://host.docker.internal:9200"]
+ # index: "suricata-alerts-%{+yyyy.MM.dd}"
+output.logstash: 
+hosts: ["http://host.docker.internal:5044"]  
+ # hosts: ["host.docker.internal:5044"]
 
 setup.template.name: "suricata-alerts"
 setup.template.pattern: "suricata-alerts-*"

@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import time
 import json
 
-BROKER = '13.222.232.66'   # replace with current session IP
+BROKER = '54.173.195.200'   # replace with current session IP
 PORT = 1883              # plaintext — so Suricata can inspect the payload
 TOPIC = 'iot/lab/topic'
 
